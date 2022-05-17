@@ -8,12 +8,12 @@ trigger:
 
 pool:
   name: Default
-  vmImage: ubuntu-latest
+  vmImage: 'ubuntu-20.04'
   demands:
   - npm
 
-variables:
-  buildConfiguration: 'Release'
+# variables:
+#   buildConfiguration: 'Release'
 
 steps:
 - task: UseDotNet@2
@@ -23,7 +23,7 @@ steps:
     version: '5.x'
 
 - task: NuGetToolInstaller@1
-  displayName: 'Use .NET SDK 5.x'
+  displayName: 'Use NuGet 5.x'
   inputs:
     versionSpec: '5.x'
 
