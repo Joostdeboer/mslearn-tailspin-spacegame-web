@@ -2,6 +2,7 @@ trigger:
 - '*'
 
 pool:
+  name: Default
   vmImage: 'ubuntu-20.04'
   demands:
   - npm
@@ -26,6 +27,8 @@ steps:
   displayName: 'Compile Sass assets'
 
 - task: gulp@1
+  inputs:
+    gulpjs: 'node_modules/gulp/bin/gulp.js'
   displayName: 'Run gulp tasks'
 
 - script: 'echo "$(Build.DefinitionName), $(Build.BuildId), $(Build.BuildNumber)" > buildinfo.txt'
@@ -44,6 +47,14 @@ steps:
     command: 'build'
     arguments: '--no-restore --configuration $(buildConfiguration)'
     projects: '**/*.csproj'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Run unit tests - $(buildConfiguration)'
+  inputs:
+    command: 'test'
+    arguments: '--no-build --configuration $(buildConfiguration)'
+    publishTestResults: true
+    projects: '**/*.Tests.csproj'
 
 - task: DotNetCoreCLI@2
   displayName: 'Publish the project - $(buildConfiguration)'
